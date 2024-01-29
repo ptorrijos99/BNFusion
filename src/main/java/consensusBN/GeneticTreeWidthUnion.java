@@ -17,7 +17,6 @@ public class GeneticTreeWidthUnion {
     public int numIterations = 1000;
     public int populationSize = 20;
     public int maxTreewidth = 5;
-    public String method = "Gamez";
 
     // Best values and stats
     private boolean[] bestIndividual;
@@ -27,7 +26,7 @@ public class GeneticTreeWidthUnion {
     public double executionTimeUnion;
     public double executionTimeGreedy;
 
-    // "Final" variables
+    // Final variables
     private final Random random;
     private int totalEdges;
     private ArrayList<Node> alpha;
@@ -46,14 +45,6 @@ public class GeneticTreeWidthUnion {
     private double[] fitness;
     private int[] treeWidths;
 
-    public GeneticTreeWidthUnion() {
-        random = new Random();
-    }
-
-    public GeneticTreeWidthUnion(int seed) {
-        random = new Random(seed);
-    }
-
     public GeneticTreeWidthUnion(int seed, int maxTreewidth) {
         this.maxTreewidth = maxTreewidth;
         random = new Random(seed);
@@ -68,18 +59,15 @@ public class GeneticTreeWidthUnion {
         double startTime = System.currentTimeMillis();
         initializeVars(dags);
 
-        if (method.equals("Gamez")) {
-            fusionUnionGamez();
-        } else {
-            fusionUnionPuerta(alphaDags);
+        initialize();
+        for (int j = 0; j < numIterations; j++) {
+            evaluate();
+            crossover();
+            evaluate();
+            mutate();
         }
 
         executionTime = (System.currentTimeMillis() - startTime) / 1000;
-
-        System.out.println("Best fitness: " + bestFitness + " | Edges: " + bestDag.getNumEdges());
-        System.out.println("Greedy SMHD: " + Utils.SMHD(fusionUnion,greedyDag) + " | Greedy edges: " + greedyDag.getNumEdges());
-
-
         return bestDag;
     }
 
@@ -124,29 +112,6 @@ public class GeneticTreeWidthUnion {
         population = new boolean[populationSize][totalEdges];
     }
 
-    private void fusionUnionGamez() {
-        // Genetic algorithm
-        //System.out.println("Initializing");
-        initialize();
-        for (int j = 0; j < numIterations; j++) {
-            //System.out.println("Iteration " + j);
-            evaluate();
-            crossover();
-            evaluate();
-            mutate();
-        }
-    }
-
-    private void fusionUnionPuerta(ArrayList<Dag> dags) {
-        // Genetic algorithm
-        initialize();
-        for (int j = 0; j < numIterations; j++) {
-            evaluate();
-            crossover();
-            mutate();
-        }
-    }
-
     private void initialize() {
         boolean uniform = minFreq == maxFreq;
 
@@ -181,19 +146,12 @@ public class GeneticTreeWidthUnion {
 
         IntStream.range(0, populationSize)
                 .parallel()
-                .forEach(i -> fitness[i] = calculateFitness(i, 0));
-
-        /*System.out.println("Fitness: ");
-        for (int i = 0; i < populationSize; i++) {
-            System.out.printf("%.2f ", fitness[i]);
-        }
-        System.out.println();*/
+                .forEach(i -> fitness[i] = calculateFitness(i));
     }
 
     private void crossover() {
         boolean[][] newPopulation = new boolean[populationSize][totalEdges];
-        // Add the best global individual to the new population
-        //System.out.println("Best individual: " + bestFitness + " | Edges: " + bestDag.getNumEdges());
+
         newPopulation[0] = bestIndividual.clone();
 
         // Add the best individual of the last iteration to the new population
@@ -205,24 +163,9 @@ public class GeneticTreeWidthUnion {
                 bestIndex = i;
             }
         }
-        //System.out.println("Best individual of the last iteration: " + bestFitness);
         newPopulation[1] = population[bestIndex];
 
         tournamentCrossover(newPopulation);
-        //uniformCrossover(newPopulation);
-
-        for (int i = 0; i < populationSize; i++) {
-            double x = (double) treeWidths[i] / maxTreewidth;
-            // Number of trues
-            int numTrues = 0;
-            for (int j = 0; j < totalEdges; j++) {
-                if (population[i][j]) {
-                    numTrues++;
-                }
-            }
-            //System.out.println(i + " | FIT " + String.format("%.1f", fitness[i]) + " | TW " + treeWidths[i] + " | x " + x + " | Edges: " + numTrues);
-        }
-
     }
 
     /** Uniform crossover with roulette wheel selection */
@@ -288,14 +231,6 @@ public class GeneticTreeWidthUnion {
         for (int i = 0; i < populationSize; i++) {
             double x = (double) treeWidths[i] / maxTreewidth;
 
-            // Number of trues
-            int numTrues = 0;
-            for (int j = 0; j < totalEdges; j++) {
-                if (population[i][j]) {
-                    numTrues++;
-                }
-            }
-
             for (int j = 0; j < totalEdges; j++) {
                 if (population[i][j]) {
                     double probRemove;
@@ -321,19 +256,10 @@ public class GeneticTreeWidthUnion {
                     }
                 }
             }
-
-            // final number of trues
-            int finalNumTrues = 0;
-            for (int j = 0; j < totalEdges; j++) {
-                if (population[i][j]) {
-                    finalNumTrues++;
-                }
-            }
-            //System.out.println(i + " | FIT " + String.format("%.1f",fitness[i]) + " | TW " + treeWidths[i] + " | x " + x + " | Edges: " + numTrues + ", " + finalNumTrues);
         }
     }
 
-    private double calculateFitness(int index, int recursive) {
+    private double calculateFitness(int index) {
         // Create the DAG that corresponds to the individual
         Dag union = new Dag(alpha);
         for (int i = 0; i < totalEdges; i++) {
@@ -347,8 +273,6 @@ public class GeneticTreeWidthUnion {
 
         double fitness;
         if (treeWidths[index] > maxTreewidth) {
-            //population[index] = fixIndividual(population[index], cliques, recursive);
-            //return calculateFitness(index, recursive+1);
             fitness = Utils.SMHD(union, fusionUnion) * ((double)  treeWidths[index] / maxTreewidth);
         } else {
             fitness = Utils.SMHD(union, fusionUnion);
@@ -361,43 +285,5 @@ public class GeneticTreeWidthUnion {
         }
 
         return fitness;
-    }
-
-    private boolean[] fixIndividual(boolean[] individual, Map<Node, Set<Node>> cliques, int recursive) {
-        boolean[] fixed = individual.clone();
-        for (Node node : cliques.keySet()) {
-            Set<Node> clique = cliques.get(node);
-            if (clique.size() > maxTreewidth - recursive) {
-                int numToRemove = clique.size() - maxTreewidth + recursive;
-                for (Node neighbor : clique) {
-                    if (numToRemove == 0) {
-                        break;
-                    }
-                    if (neighbor.equals(node)) {
-                        continue;
-                    }
-                    boolean removed = false;
-
-                    Integer position1 = edgePosition.get(new Edge(node, neighbor, Endpoint.TAIL, Endpoint.ARROW));
-                    if (position1!=null && fixed[position1]) {
-                        fixed[position1] = false;
-                        removed = true;
-                    }
-                    Integer position2 = edgePosition.get(new Edge(neighbor, node, Endpoint.TAIL, Endpoint.ARROW));
-                    if (position2!=null && fixed[position2]) {
-                        fixed[position2] = false;
-                        removed = true;
-                    }
-                    if (removed) {
-                        numToRemove--;
-                    }
-                    Set<Node> neighborClique = cliques.get(neighbor);
-                    if (neighborClique != null) {
-                        neighborClique.remove(node);
-                    }
-                }
-            }
-        }
-        return fixed;
     }
 }
