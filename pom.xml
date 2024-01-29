@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org</groupId>
-    <artifactId>bayesfl</artifactId>
+    <artifactId>consensusBN</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>BayesFL</name>
+    <name>ConsensusBN</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -73,7 +73,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.albacete.simd.bayesfl.experiments.ClusterExperiment</mainClass>
+                            <mainClass></mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
