@@ -1,8 +1,10 @@
 package consensusBN.Method;
 
+import consensusBN.ConsensusUnion;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
 import edu.cmu.tetrad.graph.Node;
+import org.albacete.simd.utils.Utils;
 
 import java.util.*;
 
@@ -23,7 +25,19 @@ public class Fusion_Method implements Population {
     private Dag greedyDag;
     private double executionTimeGreedy;
 
-    public Fusion_Method() {}
+    public Dag superGreedyDag;
+    public double timeSuperGreedy;
+
+    public Dag superGreedyEmptyDag;
+    public double timeSuperGreedyEmpty;
+
+    private final boolean useSuperGreedy;
+    private final boolean addEmptySuperGreedy;
+
+    public Fusion_Method(boolean useSuperGreedy, boolean addEmptySuperGreedy) {
+        this.useSuperGreedy = useSuperGreedy;
+        this.addEmptySuperGreedy = addEmptySuperGreedy;
+    }
 
     public void initialize(List<Dag> dags, List<Node> alpha, List<Dag> alphaDags, int maxTreewidth, Random random) {
         this.random = random;
@@ -81,8 +95,38 @@ public class Fusion_Method implements Population {
             population[1][i] = greedy.containsEdge(edgesAlpha.get(i));
         }
 
+        int i = 2;
+        if (useSuperGreedy) {
+            // Add the superGreedy solutions with maxTreewidth to the population, starting from the greedy DAG
+            ConsensusUnion.allPossibleArcs = false;
+            ConsensusUnion.initialDag = greedyDag;
+            double startTime = System.currentTimeMillis();
+            superGreedyDag = ConsensusUnion.fusionUnion(dags, "SuperGreedyMaxTreewidth", ""+maxTreewidth);
+            timeSuperGreedy = (System.currentTimeMillis() - startTime) / 1000;
+
+            for (int j = 0; j < totalEdges; j++) {
+                population[2][j] = superGreedyDag.containsEdge(edgesAlpha.get(j));
+            }
+
+            i++;
+
+            if (addEmptySuperGreedy) {
+                // Add the superGreedy solutions with maxTreewidth to the population, starting from the empty DAG
+                ConsensusUnion.allPossibleArcs = false;
+                ConsensusUnion.initialDag = null;
+                startTime = System.currentTimeMillis();
+                superGreedyEmptyDag = ConsensusUnion.fusionUnion(dags, "SuperGreedyMaxTreewidth", "" + maxTreewidth);
+                timeSuperGreedyEmpty = (System.currentTimeMillis() - startTime) / 1000;
+
+                for (int j = 0; j < totalEdges; j++) {
+                    population[3][j] = superGreedyEmptyDag.containsEdge(edgesAlpha.get(j));
+                }
+                i++;
+            }
+        }
+
         // Initialize the rest of the population with random individuals based on the frequency of the edges
-        for (int i = 2; i < populationSize; i++) {
+        for (; i < populationSize; i++) {
             for (int j = 0; j < totalEdges; j++) {
                 if (uniform) {
                     population[i][j] = random.nextBoolean();

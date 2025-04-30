@@ -3,6 +3,7 @@ package consensusBN;
 import consensusBN.Method.*;
 import edu.cmu.tetrad.graph.*;
 import edu.cmu.tetrad.graph.Dag;
+import org.albacete.simd.utils.Utils;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -19,6 +20,9 @@ public class GeneticTreeWidthUnion {
     public int maxTreewidth = 5;
     public Boolean candidatesFromInitialDAGs = false;
     public Boolean repeatCandidates = false;
+    public Boolean useSuperGreedy = false;
+    public Boolean addEmptySuperGreedy = false;
+    public Boolean useMinCutBES = false;
 
     // Best values and stats
     private boolean[] bestIndividual;
@@ -89,11 +93,15 @@ public class GeneticTreeWidthUnion {
                 method = new InitialDAGsWoRepeat_Method();
             }
             else {
-                method = new InitialDAGs_Method();
+                if (useMinCutBES) {
+                    method = new InitialDAGs_Method(true);
+                } else {
+                    method = new InitialDAGs_Method();
+                }
             }
         }
         else {
-            method = new Fusion_Method();
+            method = new Fusion_Method(useSuperGreedy, addEmptySuperGreedy);
         }
 
         method.initialize(originalDags, alpha, alphaDags, maxTreewidth, random);
@@ -125,11 +133,18 @@ public class GeneticTreeWidthUnion {
         IntStream.range(0, populationSize)
                 .parallel()
                 .forEach(i -> fitness[i] = calculateFitness(i));
+
+        /*System.out.println("Fitness: ");
+        for (int i = 0; i < populationSize; i++) {
+            System.out.printf("%.2f ", fitness[i]);
+        }
+        System.out.println();*/
     }
 
     private void crossover() {
         boolean[][] newPopulation = new boolean[populationSize][totalEdges];
         // Add the best global individual to the new population
+        //System.out.println("Best individual: " + bestFitness + " | Edges: " + bestDag.getNumEdges());
         newPopulation[0] = bestIndividual.clone();
 
         // Add the best individual of the last iteration to the new population
@@ -141,9 +156,24 @@ public class GeneticTreeWidthUnion {
                 bestIndex = i;
             }
         }
+        //System.out.println("Best individual of the last iteration: " + bestFitness);
         newPopulation[1] = population[bestIndex];
 
         tournamentCrossover(newPopulation);
+        //uniformCrossover(newPopulation);
+
+        /*for (int i = 0; i < populationSize; i++) {
+            double x = (double) treeWidths[i] / maxTreewidth;
+            // Number of trues
+            int numTrues = 0;
+            for (int j = 0; j < totalEdges; j++) {
+                if (population[i][j]) {
+                    numTrues++;
+                }
+            }
+            System.out.println(i + " | FIT " + String.format("%.1f", fitness[i]) + " | TW " + treeWidths[i] + " | x " + x + " | Edges: " + numTrues);
+        }*/
+
     }
 
     /** Uniform crossover with roulette wheel selection */
@@ -209,6 +239,14 @@ public class GeneticTreeWidthUnion {
         for (int i = 0; i < populationSize; i++) {
             double x = (double) treeWidths[i] / maxTreewidth;
 
+            // Number of trues
+            int numTrues = 0;
+            for (int j = 0; j < totalEdges; j++) {
+                if (population[i][j]) {
+                    numTrues++;
+                }
+            }
+
             for (int j = 0; j < totalEdges; j++) {
                 if (population[i][j]) {
                     double probRemove;
@@ -234,6 +272,15 @@ public class GeneticTreeWidthUnion {
                     }
                 }
             }
+
+            /* final number of trues
+            int finalNumTrues = 0;
+            for (int j = 0; j < totalEdges; j++) {
+                if (population[i][j]) {
+                    finalNumTrues++;
+                }
+            }
+            System.out.println(i + " | FIT " + String.format("%.1f",fitness[i]) + " | TW " + treeWidths[i] + " | x " + x + " | Edges: " + numTrues + ", " + finalNumTrues); */
         }
     }
 
