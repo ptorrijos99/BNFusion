@@ -10,10 +10,10 @@ import edu.cmu.tetrad.bayes.*;
 import edu.cmu.tetrad.data.*;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 import weka.classifiers.bayes.BayesNet;
 
-import static org.albacete.simd.utils.Utils.getTreeWidth;
+import static consensusBN.Utils.getTreeWidth;
 
 public class RandomBN {
 	int seed;

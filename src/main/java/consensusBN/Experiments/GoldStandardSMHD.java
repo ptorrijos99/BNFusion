@@ -6,7 +6,7 @@ import edu.cmu.tetrad.data.DiscreteVariable;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Graph;
 import edu.cmu.tetrad.graph.Node;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 import weka.classifiers.bayes.net.BIFReader;
 
 import java.util.ArrayList;

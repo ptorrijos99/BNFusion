@@ -9,7 +9,7 @@ import edu.cmu.tetrad.data.DataSet;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Graph;
 import edu.cmu.tetrad.graph.Node;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 import weka.classifiers.bayes.net.BIFReader;
 
 import java.io.*;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static consensusBN.ConsensusUnion.fusionUnion;
 import static consensusBN.Experiments.Experiments.getBDeuScore;
-import static org.albacete.simd.utils.Utils.*;
+import static consensusBN.Utils.*;
 
 
 public class ExperimentMinCut {

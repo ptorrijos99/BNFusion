@@ -4,7 +4,7 @@ import consensusBN.ConsensusUnion;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
 import edu.cmu.tetrad.graph.Node;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 
 import java.util.*;
 

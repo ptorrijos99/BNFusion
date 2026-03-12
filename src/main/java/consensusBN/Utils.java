@@ -1,4 +1,4 @@
-package org.albacete.simd.utils;
+package consensusBN;
 
 import consensusBN.BetaToAlpha;
 import consensusBN.ConsensusUnion;

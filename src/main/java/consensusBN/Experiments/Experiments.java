@@ -8,14 +8,14 @@ import edu.cmu.tetrad.bayes.*;
 import edu.cmu.tetrad.data.DataSet;
 import edu.cmu.tetrad.graph.*;
 import org.albacete.simd.utils.Problem;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 import weka.classifiers.bayes.net.BIFReader;
 
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
-import static org.albacete.simd.utils.Utils.*;
+import static consensusBN.Utils.*;
 
 
 public class Experiments {

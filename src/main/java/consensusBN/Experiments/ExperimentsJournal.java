@@ -11,14 +11,15 @@ import edu.cmu.tetrad.graph.Graph;
 import edu.cmu.tetrad.graph.GraphTransforms;
 import org.albacete.simd.algorithms.bnbuilders.GES_BNBuilder;
 import org.albacete.simd.framework.BNBuilder;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
+import org.albacete.simd.utils.Problem;
 import weka.classifiers.bayes.net.BIFReader;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
 
-import static org.albacete.simd.utils.Utils.*;
+import static consensusBN.Utils.*;
 
 public class ExperimentsJournal {
 
@@ -443,7 +444,9 @@ public class ExperimentsJournal {
             byte[] data = new byte[buffer.remaining()];
             buffer.get(data);
             try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))) {
-                cachedDags = (Map<Integer, Dag>) ois.readObject();
+                @SuppressWarnings("unchecked")
+                Map<Integer, Dag> readCache = (Map<Integer, Dag>) ois.readObject();
+                cachedDags = readCache;
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -580,13 +583,13 @@ public class ExperimentsJournal {
     // -------------------------------------------------------------------------
 
     public static double getBDeuScore(Graph graph, DataSet data) {
-        org.albacete.simd.utils.Problem problem = new org.albacete.simd.utils.Problem(data);
+        Problem problem = new Problem(data);
         if (graph == null || problem == null) return 0;
         double _score = 0;
 
         try {
             Graph dag = new EdgeListGraph(graph);
-            pdagToDag(dag);
+            Utils.pdagToDag(dag);
             HashMap<edu.cmu.tetrad.graph.Node, Integer> hashIndices = problem.getHashIndices();
 
             for (edu.cmu.tetrad.graph.Node node : problem.getVariables()) {

@@ -5,9 +5,9 @@ import java.util.*;
 import edu.cmu.tetrad.graph.*;
 import org.albacete.simd.threads.BESThread;
 import org.albacete.simd.threads.GESThread;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 
-import static org.albacete.simd.utils.Utils.pdagToDag;
+import static consensusBN.Utils.pdagToDag;
 
 public class MinCutTreeWidthUnion {
 

@@ -4,7 +4,7 @@ import consensusBN.Method.*;
 import consensusBN.MinCutTreeWidthUnion;
 import edu.cmu.tetrad.graph.*;
 import edu.cmu.tetrad.graph.Dag;
-import org.albacete.simd.utils.Utils;
+import consensusBN.Utils;
 
 import java.util.*;
 import java.util.stream.IntStream;
