@@ -9,7 +9,7 @@ import java.util.*;
 
 import static consensusBN.BetaToAlpha.transformToAlpha;
 import static consensusBN.ConsensusUnion.*;
-import static consensusBN.Utils.getTreeWidth;
+import static consensusBN.extern.utils.Utils.getTreeWidth;
 
 public class InitialDAGs_Method implements Population {
 

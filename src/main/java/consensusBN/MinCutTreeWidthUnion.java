@@ -3,11 +3,11 @@ package consensusBN;
 import java.util.*;
 
 import edu.cmu.tetrad.graph.*;
-import org.albacete.simd.threads.BESThread;
-import org.albacete.simd.threads.GESThread;
-import consensusBN.Utils;
+import consensusBN.extern.threads.BESThread;
+import consensusBN.extern.threads.GESThread;
+import consensusBN.extern.utils.Utils;
 
-import static consensusBN.Utils.pdagToDag;
+import static consensusBN.extern.utils.Utils.pdagToDag;
 
 public class MinCutTreeWidthUnion {
 

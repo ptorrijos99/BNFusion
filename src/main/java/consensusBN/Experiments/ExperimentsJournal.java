@@ -9,17 +9,17 @@ import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.EdgeListGraph;
 import edu.cmu.tetrad.graph.Graph;
 import edu.cmu.tetrad.graph.GraphTransforms;
-import org.albacete.simd.algorithms.bnbuilders.GES_BNBuilder;
-import org.albacete.simd.framework.BNBuilder;
-import consensusBN.Utils;
-import org.albacete.simd.utils.Problem;
+import consensusBN.extern.algorithms.bnbuilders.GES_BNBuilder;
+import consensusBN.extern.framework.BNBuilder;
+import consensusBN.extern.utils.Utils;
+import consensusBN.extern.utils.Problem;
 import weka.classifiers.bayes.net.BIFReader;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
 
-import static consensusBN.Utils.*;
+import static consensusBN.extern.utils.Utils.*;
 
 public class ExperimentsJournal {
 
@@ -761,7 +761,7 @@ public class ExperimentsJournal {
             for (AlgorithmResult r : results)
                 line.append(",").append(Utils.fusionSimilarity(r.dag, List.of(goldDag)));
             for (AlgorithmResult r : results)
-                line.append(",").append(Experiments.getBDeuScore(r.dag, seedData));
+                line.append(",").append(consensusBN.extern.threads.GESThread.scoreGraph(r.dag, new consensusBN.extern.utils.Problem(seedData)));
             for (AlgorithmResult r : results) {
                 Graph cpdagAlgo = GraphTransforms.dagToCpdag(new EdgeListGraph(r.dag));
                 line.append(",").append(Utils.SHDundir(cpdagAlgo, cpdagGold));

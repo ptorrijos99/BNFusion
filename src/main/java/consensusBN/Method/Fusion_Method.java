@@ -4,7 +4,7 @@ import consensusBN.ConsensusUnion;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
 import edu.cmu.tetrad.graph.Node;
-import consensusBN.Utils;
+import consensusBN.extern.utils.Utils;
 
 import java.util.*;
 

@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org</groupId>
-    <artifactId>bayesfl</artifactId>
+    <groupId>org.anonymous</groupId>
+    <artifactId>bnfusion</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>BayesFL</name>
+    <name>BNFusion</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -66,12 +66,7 @@
             <version>3.8.6</version>
         </dependency>
 
-        <!-- Local -->
-        <dependency>
-            <groupId>com.github.alfaro96</groupId>
-            <artifactId>EBNC</artifactId>
-            <version>d467827</version>
-        </dependency>
+
     
         <dependency>
             <groupId>org.eclipse.recommenders</groupId>

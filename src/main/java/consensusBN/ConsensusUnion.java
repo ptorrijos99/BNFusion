@@ -5,11 +5,11 @@ import java.util.*;
 import edu.cmu.tetrad.graph.*;
 import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
-import consensusBN.Utils;
+import consensusBN.extern.utils.Utils;
 
 import static consensusBN.AlphaOrder.alphaOrder;
 import static consensusBN.BetaToAlpha.transformToAlpha;
-import static consensusBN.Utils.getConnectedComponent;
+import static consensusBN.extern.utils.Utils.getConnectedComponent;
 
 public class ConsensusUnion {
 

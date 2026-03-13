@@ -26,7 +26,7 @@ To compile the project and build the executable JAR with dependencies, run:
 mvn clean package
 ```
 
-This will generate a JAR file in the `target/` directory (e.g., `bayesfl-1.0-jar-with-dependencies.jar`).
+This will generate a JAR file in the `target/` directory (e.g., `bnfusion-1.0-jar-with-dependencies.jar`).
 
 ## Running the Experiments
 The main entry point for running the experiments is the `consensusBN.Experiments.ExperimentsJournal` class. This class runs all the algorithms (greedy and genetic variants) for a given network and parameters at different treewidth values.
@@ -34,13 +34,13 @@ The main entry point for running the experiments is the `consensusBN.Experiments
 Run the compiled JAR:
 
 ```bash
-java -cp target/bayesfl-1.0-jar-with-dependencies.jar consensusBN.Experiments.ExperimentsJournal [index] [params_file]
+java -cp target/bnfusion-1.0-jar-with-dependencies.jar consensusBN.Experiments.ExperimentsJournal [index] [params_file]
 ```
 
 Or just run without arguments to execute a quick local test (by default it will run `alarm` with 10 clients and output parameters):
 
 ```bash
-java -cp target/bayesfl-1.0-jar-with-dependencies.jar consensusBN.Experiments.ExperimentsJournal
+java -cp target/bnfusion-1.0-jar-with-dependencies.jar consensusBN.Experiments.ExperimentsJournal
 ```
 
 ### Parameters File

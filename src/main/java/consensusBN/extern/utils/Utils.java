@@ -1,4 +1,4 @@
-package consensusBN;
+package consensusBN.extern.utils;
 
 import consensusBN.BetaToAlpha;
 import consensusBN.ConsensusUnion;
